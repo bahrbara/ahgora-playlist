@@ -1,9 +1,16 @@
 const express = require("express");
 const app = express();
-const port = 3030;
+const bodyParser = require("body-parser");
 
-app.get("/", (req, res) => res.send("Hello World!"));
+const router = express.Router();
 
-app.listen(port, () =>
-  console.log(`Example app listening at http://localhost:${port}`)
-);
+const index = require("./routes/index");
+const playlistRoutes = require("./routes/playlist");
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use("/", index);
+app.use("/playlists", playlistRoutes);
+
+module.exports = app;
