@@ -18,6 +18,7 @@ exports.mergeSnippetsAndDetails = (snippets, details) => {
 };
 
 exports.countMostPopularTerms = (items, limit) => {
+  console.log("Calculating most popular words");
   let text = "";
   items.forEach((item) => {
     text += item.snippet.title + " " + item.snippet.description;
@@ -25,6 +26,22 @@ exports.countMostPopularTerms = (items, limit) => {
   let words = text.split(" ");
   words = sortByFrequency(words);
   return words.slice(0, limit);
+};
+
+exports.generatePlaylists = (items, dailyMin) => {
+  console.log("Generating playlists");
+  const playlist = [];
+  const max = Math.max(...dailyMin);
+  items = filterVideosLongerThenMaxMin(items, max);
+
+  dailyMin.forEach((dayMin) => {
+    playlist.push({
+      minutes: dayMin,
+      items: findVideosForDay(items, dayMin),
+    });
+  });
+
+  return playlist;
 };
 
 function convertVideoDuration(time) {
@@ -46,4 +63,27 @@ function sortByFrequency(array) {
   return uniques.sort(function (a, b) {
     return frequency[b] - frequency[a];
   });
+}
+
+function filterVideosLongerThenMaxMin(items, max) {
+  return items.filter((item) => {
+    return item.contentDetails.duration < max;
+  });
+}
+
+function findVideosForDay(items, min) {
+  let i = 0;
+  let minutesLeft = min;
+  const videos = [];
+  while (i < items.length) {
+    const videoDuration = items[i].contentDetails.duration;
+    if (videoDuration <= minutesLeft) {
+      videos.push(items[i]);
+      minutesLeft -= videoDuration;
+      // Removes item from list
+      items.splice(i, 1);
+    }
+    i++;
+  }
+  return videos;
 }
