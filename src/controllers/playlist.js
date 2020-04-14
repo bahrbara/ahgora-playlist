@@ -6,6 +6,7 @@ var ytUtils = require("../utils/youtube");
 const MAX_RESULTS = 5;
 
 function contentDetails(ids) {
+  console.info("Searching videos details");
   return axios
     .get(config.youtubeAPI.videos, {
       params: {
@@ -23,6 +24,7 @@ function contentDetails(ids) {
 }
 
 function search(term) {
+  console.info("Searching videos snippets");
   return axios
     .get(config.youtubeAPI.search, {
       params: {
@@ -49,5 +51,14 @@ function search(term) {
 
 exports.get = async (req, res) => {
   const results = await search(req.query.term);
-  res.json(results).status(200);
+
+  const data = {
+    meta: {
+      mostUsedWords: ytUtils.countMostPopularTerms(results, 5),
+      dailyMin: req.query.dailyMin || "",
+    },
+    items: results,
+  };
+
+  res.json(data).status(200);
 };
