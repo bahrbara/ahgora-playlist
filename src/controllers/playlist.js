@@ -1,10 +1,11 @@
 var axios = require("axios");
+
 var config = require("../config");
 var ytUtils = require("../utils/youtube");
 
 const MAX_RESULTS = 5;
 
-function details(ids) {
+function contentDetails(ids) {
   return axios
     .get(config.youtubeAPI.videos, {
       params: {
@@ -33,9 +34,12 @@ function search(term) {
     })
     .then(async function (snippets) {
       const ids = ytUtils.extractVideoIds(snippets.data.items);
-
-      return details(ids).then((contentDetails) => {
-        return contentDetails;
+      // Find details for each video ID and merge the results
+      return contentDetails(ids).then((details) => {
+        return ytUtils.mergeSnippetsAndDetails(
+          snippets.data.items,
+          details.items
+        );
       });
     })
     .catch(function (err) {
