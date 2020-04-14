@@ -1,0 +1,26 @@
+{
+  "name": "ahgora-playlist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahrbara/ahgora-playlist.git"
+  },
+  "author": "Bahrbara",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bahrbara/ahgora-playlist/issues"
+  },
+  "homepage": "https://github.com/bahrbara/ahgora-playlist#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
